@@ -2,12 +2,22 @@
 
 {% block body %}
     {% set evolve = false %}
+    {% set pokemon_description = "description_not_available" %}
 
     {% if pokemon is not same as(null) %}
 
         {{ pokemon.name }}
 
         <img src="{{ pokemon.sprites.front_default }}">
+
+
+        {% for description in pokemon_species.flavor_text_entries %}
+            {% if description.language.name is same as("en") %}
+                {% set pokemon_description = description.flavor_text %}
+            {% endif %}
+        {% endfor %}
+
+        Description: {{ pokemon_description}}
 
         Capacités:
         {% for ability in pokemon.abilities %}
@@ -49,6 +59,20 @@
         {% else %}
             Ce pokemon n'a pas d'évolution
         {% endif %}
+
+
+        Stats:
+        {% for stats in pokemon.stats %}
+            {{ stats.base_stat }}
+            {{ stats.stat.name }}
+        {% endfor %}
+
+        Attaques possibles:
+        {% for attacks in pokemon.moves %}
+
+            {{ attacks.move.name }}
+
+        {% endfor %}
 
     {% else %}
         Pokemon not found

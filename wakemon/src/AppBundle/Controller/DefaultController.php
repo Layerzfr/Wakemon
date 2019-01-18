@@ -3,8 +3,6 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends Controller
 {
@@ -17,7 +15,7 @@ class DefaultController extends Controller
         $this->evolutionArray = array();
     }
 
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')) . DIRECTORY_SEPARATOR,
@@ -43,35 +41,18 @@ class DefaultController extends Controller
 
     private function pokemon($id)
     {
-        $c = curl_init();
-
-        curl_setopt($c, CURLOPT_URL, "https://pokeapi.co/api/v2/pokemon/" . $id . "/");
-
-        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-
-        curl_setopt($c, CURLOPT_HEADER, false);
-
-        $output = curl_exec($c);
+        $output = $this->curlAction("https://pokeapi.co/api/v2/pokemon/" . $id . "/");
 
         if ($output === false) {
             return false;
         }
-        curl_close($c);
 
         return json_decode($output, true);
     }
 
     private function species($id)
     {
-        $species = curl_init();
-
-        curl_setopt($species, CURLOPT_URL, "https://pokeapi.co/api/v2/pokemon-species/" . $id . "/");
-
-        curl_setopt($species, CURLOPT_RETURNTRANSFER, true);
-
-        curl_setopt($species, CURLOPT_HEADER, false);
-
-        $output = curl_exec($species);
+        $output = $this->curlAction("https://pokeapi.co/api/v2/pokemon-species/" . $id . "/");
 
 
         if ($output === false) {
@@ -84,15 +65,7 @@ class DefaultController extends Controller
     private function evolution($link)
     {
 
-        $evolution = curl_init();
-
-        curl_setopt($evolution, CURLOPT_URL, $link);
-
-        curl_setopt($evolution, CURLOPT_RETURNTRANSFER, true);
-
-        curl_setopt($evolution, CURLOPT_HEADER, false);
-
-        $output = curl_exec($evolution);
+        $output = $this->curlAction($link);
 
 
         if ($output === false) {
@@ -115,5 +88,17 @@ class DefaultController extends Controller
                 }
             }
         }
+    }
+
+    private function curlAction($curl){
+        $init = curl_init();
+
+        curl_setopt($init, CURLOPT_URL, $curl);
+
+        curl_setopt($init, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt($init, CURLOPT_HEADER, false);
+
+        return curl_exec($init);
     }
 }

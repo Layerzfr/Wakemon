@@ -1,0 +1,7 @@
+homepage:
+  path: /
+  controller: AppBundle\Controller\DefaultController::indexAction
+
+pokedex:
+  path: /pokemon/{id}
+  controller: AppBundle\Controller\DefaultController::pokemonDetailAction

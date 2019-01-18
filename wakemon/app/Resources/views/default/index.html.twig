@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <input id="pokemon" type="text" placeholder="type your pokemon" hidden>
+
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $('#pokemon');
+        var array = [];
+        $pokemonJson = $.get('https://pokeapi.co/api/v2/pokemon/?limit=949').done(function (data) {
+            var test = data.results;
+            test.forEach(function (t) {
+                array.push(t.name);
+            });
+
+            console.log(array);
+            $('#pokemon').show();
+        });
+        $("#pokemon").autocomplete({
+            source: array,
+            select: function (event, ui) {
+                window.location.href = "pokemon/" + ui.item.value;
+            }
+        });
+    </script>
+{% endblock %}

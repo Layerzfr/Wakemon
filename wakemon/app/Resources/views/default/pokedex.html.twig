@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if pokemon is not same as(null) %}
+
+        {{ pokemon.name }}
+
+        <img src="{{ pokemon.sprites.front_default }}">
+
+        Capacités:
+        {% for ability in pokemon.abilities %}
+            {{ ability.ability.name }}
+        {% endfor %}
+
+        Poids:
+        {{ (pokemon.weight / 10)|number_format(1, ',') }} kg
+
+        Types:
+        {% for type in pokemon.types %}
+            {{ type.type.name }}
+        {% endfor %}
+
+        Taille:
+        {{ (pokemon.height/10)|number_format(1,',') }} m
+
+        {% if from_pokemon is not same as(null) %}
+            Evolution précédente:
+            <a href="{{ from_pokemon }}">{{ from_pokemon }}</a>
+        {% endif %}
+
+        {% if evolution is not empty %}
+            Evolution(s) :
+            {% for pokemon_evolution in evolution %}
+                <a href="/pokemon/{{ pokemon_evolution }}">{{ pokemon_evolution }}</a>
+            {% endfor %}
+        {% else %}
+            Ce pokemon n'a pas d'évolution ou ne vient pas d'une évolution
+        {% endif %}
+
+    {% else %}
+        Pokemon not found
+    {% endif %}
+
+
+{% endblock %}

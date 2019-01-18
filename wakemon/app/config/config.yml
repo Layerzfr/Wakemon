@@ -69,3 +69,8 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
+#assetic:
+#    debug:          '%kernel.debug%'
+#    use_controller: '%kernel.debug%'
+#    filters:
+#        cssrewrite: ~

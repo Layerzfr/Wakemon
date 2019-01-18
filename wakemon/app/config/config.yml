@@ -9,6 +9,8 @@ parameters:
     locale: en
 
 framework:
+    templating:
+        engines: ['twig']
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
@@ -69,8 +71,8 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
-#assetic:
-#    debug:          '%kernel.debug%'
-#    use_controller: '%kernel.debug%'
-#    filters:
-#        cssrewrite: ~
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    filters:
+        cssrewrite: ~

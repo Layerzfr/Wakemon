@@ -203,3 +203,16 @@
     color: gray;
     cursor: pointer;
 }
+#loading{
+    margin: 0;
+    margin-left: 25%;
+    margin-top: 2%;
+}
+.loading{
+    background-color: #181B1D;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}

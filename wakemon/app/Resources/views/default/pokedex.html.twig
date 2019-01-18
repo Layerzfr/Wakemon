@@ -12,6 +12,9 @@
             crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <body id="forest">
+    <div class="loading">
+        <img src="https://cdn.dribbble.com/users/621155/screenshots/2835314/simple_pokeball.gif" id="loading">
+    </div>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
     <div id="container-pokedex" hidden>
         <div id="pokedex">
@@ -133,6 +136,10 @@
             });
 
             console.log(array);
+            setTimeout(
+                function () {
+                    $('.loading').hide();
+                }, 2000);
             $('#container-pokedex').show();
         });
         $("#pokemon").autocomplete({

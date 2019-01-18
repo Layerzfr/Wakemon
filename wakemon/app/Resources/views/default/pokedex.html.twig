@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% set evolve = false %}
 
     {% if pokemon is not same as(null) %}
 
@@ -30,12 +31,23 @@
         {% endif %}
 
         {% if evolution is not empty %}
-            Evolution(s) :
             {% for pokemon_evolution in evolution %}
-                <a href="/pokemon/{{ pokemon_evolution }}">{{ pokemon_evolution }}</a>
+                {% if pokemon_evolution is not same as(from_pokemon) %}
+                    {% set evolve = true %}
+                {% endif %}
             {% endfor %}
         {% else %}
-            Ce pokemon n'a pas d'évolution ou ne vient pas d'une évolution
+        {% endif %}
+
+        {% if evolve is same as(true) %}
+            Evolution(s) :
+            {% for pokemon_evolution in evolution %}
+                {% if pokemon_evolution is not same as(from_pokemon) %}
+                    <a href="/pokemon/{{ pokemon_evolution }}">{{ pokemon_evolution }}</a>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            Ce pokemon n'a pas d'évolution
         {% endif %}
 
     {% else %}

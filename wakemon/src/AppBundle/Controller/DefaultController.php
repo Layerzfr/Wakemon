@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
@@ -37,6 +38,20 @@ class DefaultController extends Controller
             'evolution' => $this->evolutionArray,
             'from_pokemon' => $species['evolves_from_species']['name'],
         ]);
+    }
+
+    public function pokemonAjaxAction($id){
+        $pokemon = $this->pokemon($id);
+        $this->pokemonName = $pokemon['name'];
+        $species = $this->species($pokemon['id']);
+        $this->evolution($species['evolution_chain']['url']);
+
+        return new JsonResponse(array([
+            'pokemon' => $pokemon,
+            'pokemon_species' => $species,
+            'evolution' => $this->evolutionArray,
+            'from_pokemon' => $species['evolves_from_species']['name'],
+        ]));
     }
 
     private function pokemon($id)

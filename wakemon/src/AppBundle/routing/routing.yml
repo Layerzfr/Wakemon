@@ -5,3 +5,7 @@ homepage:
 pokedex:
   path: /pokemon/{id}
   controller: AppBundle\Controller\DefaultController::pokemonDetailAction
+
+pokedex_ajax:
+  path: /pokemon/ajax/{id}
+  controller: AppBundle\Controller\DefaultController::pokemonAjaxAction

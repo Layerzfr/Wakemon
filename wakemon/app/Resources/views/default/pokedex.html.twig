@@ -17,13 +17,19 @@
     </div>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
     <div id="container-pokedex" hidden>
+        <div class="choosen">
+
+        </div>
         <div id="pokedex">
             <div class="sensor">
                 <button></button>
             </div>
+            {% if pokemon is not same as(null) %}
+                <input type="hidden" id="pokemon-id" value="{{ pokemon.id }}">
+            {% endif %}
             <div class="camera-display">
                 {% if pokemon is not same as(null) %}
-                    <img src="{{ pokemon.sprites.front_default }}"/>
+                    <img id="sprite" src="{{ pokemon.sprites.front_default }}"/>
                 {% else %}
                     <img src="https://t2.rbxcdn.com/72ff3d231dbf024a80b23adfa8fb49a1">
                 {% endif %}
@@ -36,35 +42,35 @@
                             {% set pokemon_description = description.flavor_text %}
                         {% endif %}
                     {% endfor %}
-                    <h2>{{ pokemon.name | capitalize }}</h2>
+                    <h2 id="pokemon-name">{{ pokemon.name | capitalize }}</h2>
                     <h3>Description</h3>
-                    <h4>
+                    <h4 id="description">
                         {{ pokemon_description }}
                     </h4>
                     <h3>Types:</h3>
-                    <ul>
+                    <ul id="type">
                         {% for type in pokemon.types %}
                             <li>{{ type.type.name }}</li>
                         {% endfor %}
                     </ul>
                     <h3>Stats</h3>
-                    <ul>
+                    <ul id="stats">
                         {% for stats in pokemon.stats %}
                             <li>{{ stats.base_stat }} {{ stats.stat.name }}</li>
                         {% endfor %}
                     </ul>
                     <h3>Weight</h3>
-                    <h4>{{ (pokemon.weight / 10)|number_format(1, ',') }} kg</h4>
+                    <h4 id="weight">{{ (pokemon.weight / 10)|number_format(1, ',') }} kg</h4>
                     <h3>Height</h3>
-                    <h4>{{ (pokemon.height/10)|number_format(1,',') }} m</h4>
+                    <h4 id="height">{{ (pokemon.height/10)|number_format(1,',') }} m</h4>
                     <h3>Abilities</h3>
-                    <ul>
+                    <ul id="abilities">
                         {% for ability in pokemon.abilities %}
                             <li>{{ ability.ability.name }}</li>
                         {% endfor %}
                     </ul>
                     <h3>Moves</h3>
-                    <ul>
+                    <ul id="moves">
                         {% for attacks in pokemon.moves %}
                             <li>{{ attacks.move.name }}</li>
                         {% endfor %}
@@ -95,8 +101,8 @@
                 <button class="level-button"></button>
                 <button class="level-button"></button>
 
-                <button class="pokedex-mode black-button">Pokedex</button>
-                <button class="game-mode black-button">Game</button>
+                <button class="pokedex-mode black-button choose">Choose</button>
+                <button class="game-mode black-button disabled">Fight</button>
 
             </div>
         </div>
@@ -136,14 +142,54 @@
             });
 
             console.log(array);
-            $('.loading').hide();
+            $('.loading').fadeOut("slow");
             $('#container-pokedex').show();
         });
         $("#pokemon").autocomplete({
             source: array,
             select: function (event, ui) {
-                window.location.href = "/pokemon/" + ui.item.value;
+                $('.loading').fadeIn("slow");
+                $.get('/pokemon/ajax/'+ ui.item.value).done(function(data){
+                    console.log(data);
+                    data.forEach(function (pokemon) {
+                        $('#pokemon-id').val(pokemon.pokemon.id);
+                        $('#pokemon-name').html(pokemon.pokemon.name);
+                        $('#sprite').attr('src', pokemon.pokemon.sprites.front_default);
+                        pokemon.pokemon_species.flavor_text_entries.forEach(function (description) {
+                            if(description.language.name === "en"){
+                                $('#description').html(description.flavor_text);
+                            }
+                        });
+                        $('#type').html('');
+                        pokemon.pokemon.types.forEach(function (type) {
+                            $('#type').append('<li>'+ type.type.name +'</li>');
+                        });
+                        $('#stats').html('');
+                        pokemon.pokemon.stats.forEach(function (stats) {
+                            $('#stats').append('<li>'+ stats.base_stat +' '+ stats.stat.name +'</li>');
+                        });
+                        $('#weight').html((pokemon.pokemon.weight / 10)+ ' kg');
+                        $('#height').html((pokemon.pokemon.height / 10) + ' m');
+                        $('#abilities').html('');
+                        pokemon.pokemon.abilities.forEach(function (ability) {
+                            $('#abilities').append('<li>'+ ability.ability.name +'</li>');
+                        });
+                        $('#moves').html('');
+                        pokemon.pokemon.moves.forEach(function (move) {
+                            $('#moves').append('<li>'+ move.move.name + '</li>');
+                        });
+
+                        $('.loading').fadeOut(1000);
+                    });
+                });
+                // window.location.href = "/pokemon/" + ui.item.value;
             }
         });
+
+        $('.choose').click(function () {
+            var id = $('#pokemon-id').val();
+            var img = $('.camera-display img').clone();
+            $('.choosen').append(img);
+        })
     </script>
 {% endblock %}
